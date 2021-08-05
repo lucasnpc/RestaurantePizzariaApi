@@ -1,15 +1,14 @@
-const { response } = require('express');
 const client = require('../database')
 
-const getQuery = {
+const getItensQuery = {
     name: 'get-itens',
     text: 'SELECT * FROM "ItensCardapio"'
 }
-const getCountQuery = {
+const getItensCountQuery = {
     name: 'get-item-count',
     text: 'SELECT COUNT(*) FROM "ItensCardapio"'
 }
-const queryInsert = {
+const queryInsertItem = {
     name: 'insert-item',
     text: 'INSERT INTO "ItensCardapio"("idItem", preco, descricao) VALUES ($1, $2, $3)'
 }
@@ -18,8 +17,7 @@ class CardapioController {
 
     async getItens(req, res) {
         try {
-            const dbRes = await client.query(getQuery)
-            console.log(dbRes);
+            const dbRes = await client.query(getItensQuery)
             res.send({
                 success: true,
                 data: dbRes.rows
@@ -29,7 +27,7 @@ class CardapioController {
 
     async getItemCount(req, res) {
         try {
-            const dbRes = await client.query(getCountQuery)
+            const dbRes = await client.query(getItensCountQuery)
             console.log(dbRes);
             res.send({
                 success: true,
@@ -41,8 +39,7 @@ class CardapioController {
     async postItem(req, res){
         try {
             const values = [req.body.id, req.body.preco, req.body.descricao]
-            const dbRes = await client.query(queryInsert, values)
-            console.log(dbRes);
+            const dbRes = await client.query(queryInsertItem, values)
             res.send({
                 success: true,
                 data: dbRes.rows
