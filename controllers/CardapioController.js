@@ -38,7 +38,7 @@ class CardapioController {
 
     async postItem(req, res){
         try {
-            const values = [req.body.id, req.body.preco, req.body.descricao]
+            const values = [req.body.idItem, req.body.preco, req.body.descricao]
             const dbRes = await client.query(queryInsertItem, values)
             res.send({
                 success: true,
