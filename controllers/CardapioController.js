@@ -10,7 +10,7 @@ const getItensCountQuery = {
 }
 const queryInsertItem = {
     name: 'insert-item',
-    text: 'INSERT INTO "ItensCardapio"("idItem", preco, descricao) VALUES ($1, $2, $3)'
+    text: 'INSERT INTO "ItensCardapio"(preco, descricao) VALUES ($1, $2)'
 }
 
 class CardapioController {
@@ -38,7 +38,7 @@ class CardapioController {
 
     async postItem(req, res){
         try {
-            const values = [req.body.idItem, req.body.preco, req.body.descricao]
+            const values = [req.body.preco, req.body.descricao]
             const dbRes = await client.query(queryInsertItem, values)
             res.send({
                 success: true,
