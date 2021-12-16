@@ -18,6 +18,8 @@ routes.get('/caixa/getEntradas', CaixaControler.getInflows);
 routes.get('/caixa/getSaidas', CaixaControler.getExpenses);
 routes.post('/caixa/postEntrada', CaixaControler.postInflow)
 routes.post('/caixa/postSaida', CaixaControler.postExpense);
+routes.get('/caixa/getTopMenuItems', CaixaControler.getTopMenuItems);
+routes.get('/caixa/getTopSalesDesks', CaixaControler.getTopSalesDesks);
 
 routes.get('/clientes/getClientes', ClientesController.getCustomers);
 routes.post('/clientes/postCliente', ClientesController.postCustomer)
