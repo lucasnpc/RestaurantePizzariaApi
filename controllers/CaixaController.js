@@ -5,9 +5,9 @@ const getExpensesQuery = 'SELECT * FROM "Saidas"'
 const queryInsertInflow = 'INSERT INTO "Entradas"("numeroMesa", "itensCardapio", "valorConta", "formaPagamento")' +
     ' VALUES ($1, $2, $3, $4);'
 const queryInsertExpense = 'INSERT INTO "Saidas"(descricao, valor) VALUES ($1, $2);'
-const queryGetTopMenuItems = 'SELECT unnest("itensCardapio") as "name", COUNT("itensCardapio"::text) as "value"' +
+const queryGetTopMenuItems = 'SELECT unnest("itensCardapio") as "name", COUNT("itensCardapio"::text) as "value", SUM("valorConta") as "totalValue"' +
     ' FROM public."Entradas" GROUP BY "name" ORDER BY "value" DESC LIMIT 3;'
-const queryGetTopSalesDesks = 'SELECT "numeroMesa" as "name", COUNT("numeroMesa") as "value"' +
+const queryGetTopSalesDesks = 'SELECT "numeroMesa" as "name", COUNT("numeroMesa") as "value", SUM("valorConta") as "totalValue"' +
     'FROM public."Entradas" GROUP BY "name" ORDER BY "value" DESC LIMIT 3;'
 
 class CaixaControler {
