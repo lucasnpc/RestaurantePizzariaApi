@@ -5,8 +5,8 @@ const CardapioController = require('./controllers/CardapioController');
 const ClientesController = require('./controllers/ClientesController');
 const ContasController = require('./controllers/ContasController');
 const FuncionariosController = require('./controllers/FuncionariosController');
-const NegocioController = require('./controllers/NegocioController');
-const UsuarioController = require('./controllers/UsuarioController');
+const NegocioController = require('./controllers/BusinessController');
+const UsuarioController = require('./controllers/UserController');
 
 const routes = express.Router();
 
