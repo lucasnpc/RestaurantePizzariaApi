@@ -19,9 +19,10 @@ class EmployeeController {
     }
     async postEmployee(req, res) {
         try {
-            const values = [req.body.cpf, req.body.nome, req.body.rua, req.body.numero, req.body.bairro, req.body.cidade, req.body.telefone,
-            req.body.cargo, req.body.dataAdmissao, req.body.dataNascimento, req.body.status]
-            const dbRes = await client.query(queryPostEmployee, values)
+            const values = [req.body.cpf, req.body.name, req.body.street, req.body.number, req.body.district, req.body.city, req.body.phone,
+            req.body.role, req.body.admissionDate, req.body.birthDate, req.body.terminationDate, req.body.salary, req.body.isOutsource, req.body.isActive,
+            req.body.businessCnpj]
+            await client.query(queryPostEmployee, values)
             res.send({
                 success: true
             })

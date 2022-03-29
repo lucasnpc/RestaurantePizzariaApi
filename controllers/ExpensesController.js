@@ -1,12 +1,12 @@
 const client = require('../database')
 
 const getExpensesQuery = 'SELECT * FROM public."Expenses"'
-const queryInsertExpense = 'INSERT INTO public."Expenses"("expenseId", description, value, "expenseDate", "businessCnpj") ' +
-    'VALUES ($1, $2, $3, $4, $5);'
+const queryInsertExpense = 'INSERT INTO public."Expenses"(description, value, "expenseDate", "businessCnpj") ' +
+    'VALUES ($1, $2, $3, $4);'
 
 class ExpensesController {
 
-    async getExpenses(res) {
+    async getExpenses(req, res) {
         try {
             const dbRes = await client.query(getExpensesQuery)
             res.send({
@@ -19,7 +19,7 @@ class ExpensesController {
     }
     async postExpense(req, res) {
         try {
-            const values = [req.body.descricao, req.body.valor]
+            const values = [req.body.description, req.body.value, req.body.expenseDate, req.body.businessCnpj]
             await client.query(queryInsertExpense, values)
             res.send({
                 success: true

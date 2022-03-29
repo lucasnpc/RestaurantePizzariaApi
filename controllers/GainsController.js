@@ -1,16 +1,16 @@
 const client = require('../database')
 
 const getOrdersQuery = 'SELECT * FROM public."Gains"'
-const queryInsertInflow = 'INSERT INTO public."Gains"("gainId", "deskDescription", "menuItems", value, "paymentWay", "gainDate", "employeeCpf",'+
- '"additionalValue", "businessCnpj") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);'
+const queryInsertInflow = 'INSERT INTO public."Gains"("deskDescription", "menuItems", value, "paymentWay", "gainDate", "employeeCpf",' +
+    '"additionalValue", "businessCnpj") VALUES ($1, $2, $3, $4, $5, $6, $7, $8);'
 const queryGetTopMenuItems = 'SELECT unnest("menuItems") as "item", COUNT("menuItems"::text) as "quantity", SUM("value") as "totalPrice"' +
-    ' FROM public."Gains" GROUP BY "item" ORDER BY "value" DESC LIMIT 3;'
+    ' FROM public."Gains" GROUP BY "item" ORDER BY "totalPrice" DESC LIMIT 3;'
 const queryGetTopSalesDesks = 'SELECT "deskDescription" as "desk", COUNT("deskDescription") as "quantity", SUM("value") as "totalPrice"' +
-    'FROM public."Gains" GROUP BY "desk" ORDER BY "value" DESC LIMIT 3;'
+    'FROM public."Gains" GROUP BY "desk" ORDER BY "totalPrice" DESC LIMIT 3;'
 
 class GainsController {
 
-    async getInflows(req, res) {
+    async getGains(req, res) {
         try {
             const dbRes = await client.query(getOrdersQuery)
             res.send({
@@ -43,9 +43,10 @@ class GainsController {
             console.log(error);
         }
     }
-    async postInflow(req, res) {
+    async postGain(req, res) {
         try {
-            const values = [req.body.numeroMesa, req.body.itensCardapio, req.body.valorConta, req.body.formaPagamento];
+            const values = [req.body.deskDescription, req.body.menuItems, req.body.value, req.body.paymentWay, req.body.gainDate,
+            req.body.employeeCpf, req.body.additionalValue, req.body.businessCnpj];
             await client.query(queryInsertInflow, values)
             res.send({
                 success: true

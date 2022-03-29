@@ -14,9 +14,9 @@ routes.get("/itens/getItem", MenuItemController.getItens);
 routes.get("/itens/getItemCount", MenuItemController.getItemCount);
 routes.post("/itens/postItem", MenuItemController.postItem);
 
-routes.get('/caixa/getEntradas', GainsController.getInflows);
+routes.get('/caixa/getEntradas', GainsController.getGains);
 routes.get('/caixa/getSaidas', ExpensesController.getExpenses);
-routes.post('/caixa/postEntrada', GainsController.postInflow)
+routes.post('/caixa/postEntrada', GainsController.postGain)
 routes.post('/caixa/postSaida', ExpensesController.postExpense);
 routes.get('/caixa/getTopMenuItems', GainsController.getTopMenuItems);
 routes.get('/caixa/getTopSalesDesks', GainsController.getTopSalesDesks);
