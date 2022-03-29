@@ -1,19 +1,14 @@
 const client = require('../database')
 
-const getItensQuery = {
-    name: 'get-itens',
-    text: 'SELECT * FROM "ItensCardapio"'
-}
-const getItensCountQuery = {
-    name: 'get-item-count',
-    text: 'SELECT COUNT(*) FROM "ItensCardapio"'
-}
-const queryInsertItem = {
-    name: 'insert-item',
-    text: 'INSERT INTO "ItensCardapio"(preco, descricao) VALUES ($1, $2)'
-}
+const getItensQuery = 'SELECT * FROM public."MenuItem"'
 
-class CardapioController {
+const getItensCountQuery = 'SELECT COUNT(*) FROM public."MenuItem"'
+
+const queryInsertItem = 'INSERT INTO public."MenuItem"("itemId", "productListNQuantity", price, description, "businessCnpj")' +
+    ' VALUES ($1, $2, $3, $4, $5)'
+
+
+class MenuItemController {
 
     async getItens(req, res) {
         try {
@@ -36,7 +31,7 @@ class CardapioController {
         } catch (error) { console.log(error); }
     }
 
-    async postItem(req, res){
+    async postItem(req, res) {
         try {
             const values = [req.body.preco, req.body.descricao]
             const dbRes = await client.query(queryInsertItem, values)
@@ -48,4 +43,4 @@ class CardapioController {
     }
 }
 
-module.exports = new CardapioController();
+module.exports = new MenuItemController();

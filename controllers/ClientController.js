@@ -1,10 +1,10 @@
 const client = require('../database')
 
-const getClientsQuery = 'SELECT * FROM "Clientes"'
-const queryInsertClient = 'INSERT INTO "Clientes"(telefone, nome, numero, rua, bairro, cidade)' +
-    'VALUES ($1, $2, $3, $4, $5, $6);'
+const getClientsQuery = 'SELECT * FROM public."Client"'
+const queryInsertClient = 'INSERT INTO public."Client"("clientId", name, street, "number", district, city, phone, "businessCnpj")' +
+    'VALUES ($1, $2, $3, $4, $5, $6, $7, $8);'
 
-class ClientesController {
+class ClientController {
     async getCustomers(req, res) {
         try {
             const dbRes = await client.query(getClientsQuery)
@@ -26,4 +26,4 @@ class ClientesController {
     }
 }
 
-module.exports = new ClientesController();
+module.exports = new ClientController();

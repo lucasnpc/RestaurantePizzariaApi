@@ -5,7 +5,7 @@ const authUserQuery = 'SELECT * FROM public."User" WHERE "email" = $1 and passwo
 const queryInsertUser = 'INSERT INTO "User"("email", "password", "userType", "businessCnpj")' +
     'VALUES ($1, $2, $3, $4);'
 
-class UsuarioController {
+class UserController {
     async getUsuarios(req, res) {
         try {
             const dbRes = await client.query(getUsersQuery)
@@ -25,7 +25,7 @@ class UsuarioController {
                 res.status(500).json({ message: 'User or pass Incorrect' })
             res.send({
                 success: true,
-                data: dbRes
+                data: dbRes.rows[0]
             })
         } catch (error) {
             console.log(error);
@@ -45,4 +45,4 @@ class UsuarioController {
     }
 }
 
-module.exports = new UsuarioController();
+module.exports = new UserController();

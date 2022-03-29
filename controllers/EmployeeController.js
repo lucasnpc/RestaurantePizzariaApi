@@ -1,10 +1,11 @@
 const client = require('../database')
 
-const getEmployeesQuery = 'SELECT * FROM "Funcionarios"'
-const queryPostEmployee = 'INSERT INTO public."Funcionarios"(cpf, nome, rua, numero, bairro, cidade, telefone, cargo,' +
-    '"dataAdmissao", "dataNascimento", status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);'
+const getEmployeesQuery = 'SELECT * FROM public."Employee"'
+const queryPostEmployee = 'INSERT INTO public.public."Employee"(cpf, name, street, "number", district, city, phone, role, ' +
+    '"admissionDate", "birthDate", "terminationDate", salary, "isOutsource", "isActive", "businessCnpj")' +
+    'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15);'
 
-class FuncionariosController {
+class EmployeeController {
     async getEmployees(req, res) {
         try {
             const dbRes = await client.query(getEmployeesQuery)
@@ -30,4 +31,4 @@ class FuncionariosController {
     }
 }
 
-module.exports = new FuncionariosController();
+module.exports = new EmployeeController();
