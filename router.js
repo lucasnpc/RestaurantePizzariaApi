@@ -7,6 +7,7 @@ const BusinessController = require('./controllers/BusinessController');
 const UserController = require('./controllers/UserController');
 const GainsController = require('./controllers/GainsController');
 const ExpensesController = require('./controllers/ExpensesController');
+const OrdersController = require('./controllers/OrdersController')
 
 const routes = express.Router();
 
@@ -33,5 +34,9 @@ routes.post('/negocios/postNegocio', BusinessController.postBusiness);
 routes.get('/usuarios/getUsuarios', UserController.getUsuarios);
 routes.post('/usuarios/authUsuarios', UserController.authUsuario);
 routes.post('/usuario/postUsuario', UserController.postUser);
+
+routes.get('/dashboard/getPedidosTotal', OrdersController.getTotalOrders)
+routes.get('/dashboard/getPedidosAtivos', OrdersController.getActiveOrders)
+routes.get('/dashboard/getPedidosConcluidos', OrdersController.getConcludedOrders)
 
 module.exports = routes;
