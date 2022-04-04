@@ -38,5 +38,7 @@ routes.post('/usuario/postUsuario', UserController.postUser);
 routes.get('/dashboard/getPedidosTotal', OrdersController.getTotalOrders)
 routes.get('/dashboard/getPedidosAtivos', OrdersController.getActiveOrders)
 routes.get('/dashboard/getPedidosConcluidos', OrdersController.getConcludedOrders)
+routes.get('/dashboard/getTotalEntradas', GainsController.getTotalGains)
+routes.get('/dashboard/getTotalSaidas', ExpensesController.getTotalExpenses)
 
 module.exports = routes;

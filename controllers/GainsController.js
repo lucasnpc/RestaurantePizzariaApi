@@ -7,6 +7,7 @@ const queryGetTopMenuItems = 'SELECT unnest("menuItems") as "item", COUNT("menuI
     ' FROM public."Gains" GROUP BY "item" ORDER BY "totalPrice" DESC LIMIT 3;'
 const queryGetTopSalesDesks = 'SELECT "deskDescription" as "desk", COUNT("deskDescription") as "quantity", SUM("value") as "totalPrice"' +
     'FROM public."Gains" GROUP BY "desk" ORDER BY "totalPrice" DESC LIMIT 3;'
+const getTotalGainsQuery = 'SELECT SUM(value) as total FROM public."Gains";'
 
 class GainsController {
 
@@ -43,6 +44,18 @@ class GainsController {
             console.log(error);
         }
     }
+    async getTotalGains(req, res) {
+        try {
+            const dbRes = await client.query(getTotalGainsQuery)
+            res.send({
+                success: true,
+                data: dbRes.rows[0].total
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async postGain(req, res) {
         try {
             const values = [req.body.deskDescription, req.body.menuItems, req.body.value, req.body.paymentWay, req.body.gainDate,
