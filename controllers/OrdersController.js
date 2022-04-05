@@ -1,14 +1,15 @@
 const client = require('../database')
 
-const getTotalOrdersQuery = 'SELECT COUNT(*) FROM public."Orders"'
-const getActiveOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = false;'
-const getConcludedOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = true;'
+const getTotalOrdersQuery = 'SELECT COUNT(*) FROM public."Orders" WHERE "businessCnpj" = $1'
+const getActiveOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = false AND "businessCnpj" = $1;'
+const getConcludedOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = true AND "businessCnpj" = $1;'
 
 class OrdersController {
 
     async getTotalOrders(req, res) {
         try {
-            const dbRes = await client.query(getTotalOrdersQuery)
+            const values = [req.query.businessCnpj]
+            const dbRes = await client.query(getTotalOrdersQuery, values)
             res.send({
                 success: true,
                 data: dbRes.rows[0].count
@@ -20,7 +21,8 @@ class OrdersController {
 
     async getActiveOrders(req, res) {
         try {
-            const dbRes = await client.query(getActiveOrdersQuery)
+            const values = [req.query.businessCnpj]
+            const dbRes = await client.query(getActiveOrdersQuery, values)
             res.send({
                 success: true,
                 data: dbRes.rows
@@ -32,7 +34,8 @@ class OrdersController {
 
     async getConcludedOrders(req, res) {
         try {
-            const dbRes = await client.query(getConcludedOrdersQuery)
+            const values = [req.query.businessCnpj]
+            const dbRes = await client.query(getConcludedOrdersQuery, values)
             res.send({
                 success: true,
                 data: dbRes.rows
