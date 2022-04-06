@@ -1,13 +1,14 @@
 const client = require('../database')
 
-const getClientsQuery = 'SELECT * FROM public."Client"'
+const getClientsQuery = 'SELECT * FROM public."Client" WHERE "businessCnpj" = $1'
 const queryInsertClient = 'INSERT INTO public."Client"(name, street, "number", district, city, phone, "businessCnpj")' +
     'VALUES ($1, $2, $3, $4, $5, $6, $7);'
 
 class ClientController {
     async getCustomers(req, res) {
         try {
-            const dbRes = await client.query(getClientsQuery)
+            const values = [req.query.businessCnpj]
+            const dbRes = await client.query(getClientsQuery, values)
             res.send({
                 success: true,
                 data: dbRes.rows

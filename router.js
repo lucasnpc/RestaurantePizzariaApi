@@ -19,8 +19,6 @@ routes.get('/caixa/getEntradas', GainsController.getGains);
 routes.get('/caixa/getSaidas', ExpensesController.getExpenses);
 routes.post('/caixa/postEntrada', GainsController.postGain)
 routes.post('/caixa/postSaida', ExpensesController.postExpense);
-routes.get('/caixa/getTopMenuItems', GainsController.getTopMenuItems);
-routes.get('/caixa/getTopSalesDesks', GainsController.getTopSalesDesks);
 
 routes.get('/clientes/getClientes', ClientController.getCustomers);
 routes.post('/clientes/postCliente', ClientController.postCustomer)
@@ -28,7 +26,6 @@ routes.post('/clientes/postCliente', ClientController.postCustomer)
 routes.get('/funcionarios/getFuncionarios', EmployeeController.getEmployees);
 routes.post('/funcionarios/postFuncionario', EmployeeController.postEmployee);
 
-routes.get('/negocios/getNegocio', BusinessController.getBusiness);
 routes.post('/negocios/postNegocio', BusinessController.postBusiness);
 
 routes.get('/usuarios/getUsuarios', UserController.getUsuarios);
@@ -38,6 +35,8 @@ routes.post('/usuario/postUsuario', UserController.postUser);
 routes.get('/dashboard/getPedidosTotal', OrdersController.getTotalOrders)
 routes.get('/dashboard/getPedidosAtivos', OrdersController.getActiveOrders)
 routes.get('/dashboard/getPedidosConcluidos', OrdersController.getConcludedOrders)
+routes.get('/dashboard/getMenuTopItens', OrdersController.getTopMenuItems);
+routes.get('/dashboard/getMesasTopVendas', OrdersController.getTopSalesDesks);
 routes.get('/dashboard/getTotalEntradas', GainsController.getTotalGains)
 routes.get('/dashboard/getTotalSaidas', ExpensesController.getTotalExpenses)
 

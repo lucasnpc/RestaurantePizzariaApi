@@ -4,13 +4,6 @@ const queryInsertBusiness = 'INSERT INTO public."Business"(cnpj, "corporateName"
     'VALUES ($1, $2, $3, $4, $5, $6, $7);'
 
 class BusinessController {
-    async getBusiness(req, res) {
-        try {
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     async postBusiness(req, res) {
         try {

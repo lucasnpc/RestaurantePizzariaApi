@@ -1,6 +1,6 @@
 const client = require('../database')
 
-const getUsersQuery = 'SELECT * FROM "Usuario"'
+const getUsersQuery = 'SELECT * FROM "Usuario" WHERE "businessCnpj" = $1;'
 const authUserQuery = 'SELECT * FROM public."User" WHERE "email" = $1 and password = $2;'
 const queryInsertUser = 'INSERT INTO "User"("email", "password", "userType", "businessCnpj")' +
     'VALUES ($1, $2, $3, $4);'
@@ -8,7 +8,8 @@ const queryInsertUser = 'INSERT INTO "User"("email", "password", "userType", "bu
 class UserController {
     async getUsuarios(req, res) {
         try {
-            const dbRes = await client.query(getUsersQuery)
+            const values = [req.query.businessCnpj]
+            const dbRes = await client.query(getUsersQuery, values)
             res.send({
                 success: true,
                 data: dbRes.rows

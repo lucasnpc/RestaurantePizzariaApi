@@ -3,10 +3,6 @@ const client = require('../database')
 const getGainsQuery = 'SELECT * FROM public."Gains" WHERE "businessCnpj" = $1'
 const queryInsertInflow = 'INSERT INTO public."Gains"("deskDescription", "menuItems", value, "paymentWay", "gainDate", "employeeCpf",' +
     '"additionalValue", "businessCnpj") VALUES ($1, $2, $3, $4, $5, $6, $7, $8);'
-const queryGetTopMenuItems = 'SELECT unnest("menuItems") as "item", COUNT("menuItems"::text) as "quantity", SUM("value") as "totalPrice"' +
-    ' FROM public."Gains" GROUP BY "item" ORDER BY "totalPrice" DESC LIMIT 3;'
-const queryGetTopSalesDesks = 'SELECT "deskDescription" as "desk", COUNT("deskDescription") as "quantity", SUM("value") as "totalPrice"' +
-    'FROM public."Gains" GROUP BY "desk" ORDER BY "totalPrice" DESC LIMIT 3;'
 const getTotalGainsQuery = 'SELECT SUM(value) as total FROM public."Gains" WHERE "businessCnpj" = $1;'
 
 class GainsController {
@@ -23,30 +19,7 @@ class GainsController {
             console.log(error);
         }
     }
-    async getTopMenuItems(req, res) {
-        try {
-            const values = [req.query.businessCnpj]
-            const dbRes = await client.query(queryGetTopMenuItems, values)
-            res.send({
-                success: true,
-                data: dbRes.rows
-            })
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    async getTopSalesDesks(req, res) {
-        try {
-            const values = [req.query.businessCnpj]
-            const dbRes = await client.query(queryGetTopSalesDesks, values)
-            res.send({
-                success: true,
-                data: dbRes.rows
-            })
-        } catch (error) {
-            console.log(error);
-        }
-    }
+
     async getTotalGains(req, res) {
         try {
             const values = [req.query.businessCnpj]
