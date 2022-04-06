@@ -25,7 +25,6 @@ class MenuItemController {
         try {
             const values = [req.query.businessCnpj]
             const dbRes = await client.query(getItensCountQuery, values)
-            console.log(dbRes);
             res.send({
                 success: true,
                 data: dbRes.rows[0].count
