@@ -9,6 +9,11 @@ const queryGetTopMenuItems = 'SELECT "description" as "item", COUNT("description
 const queryGetTopSalesDesks = 'SELECT "deskDescription" as "desk", COUNT("deskDescription") as "quantity", SUM("price") as "totalPrice" ' +
     'FROM public."Orders" INNER JOIN "MenuItem" ON "Orders"."itemId" = "MenuItem"."itemId" ' +
     'WHERE "Orders"."businessCnpj" = $1 GROUP BY "desk" ORDER BY "totalPrice" DESC LIMIT 3;'
+const queryInsertOrder = 'INSERT INTO public."Orders"("employeeCpf", "deskDescription", concluded, "businessCnpj", "dateTimeOrder")' +
+    ' VALUES($1, $2, $3, $4, $5); '
+const queryInsertMenuItemOrder = 'INSERT INTO public."OrderMenuItems"("orderId", "itemId", "itemQuantity")' +
+    ' VALUES ($1, $2, $3);'
+const querySelectLastOrder = 'SELECT "orderId" FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 
 class OrdersController {
 
@@ -71,6 +76,31 @@ class OrdersController {
             res.send({
                 success: true,
                 data: dbRes.rows
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async postOrder(req, res) {
+        try {
+            const values = [req.body.employeeCpf, req.body.deskDescription, req.body.concluded, req.body.businessCnpj, req.body.dateTimeOrder]
+            await client.query(queryInsertOrder, values)
+            const dbRes = await client.query(querySelectLastOrder, [req.body.businessCnpj])
+            res.send({
+                sucess: true,
+                orderId: dbRes.rows[0].orderId
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async postOrderMenuItems(req, res) {
+        try {
+            const values = [req.body.orderId, req.body.itemId, req.body.itemQuantity]
+            await client.query(queryInsertMenuItemOrder, values)
+            res.send({
+                sucess: true
             })
         } catch (error) {
             console.log(error);
