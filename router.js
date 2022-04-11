@@ -37,9 +37,10 @@ routes.get('/dashboard/getPedidosAtivos', OrdersController.getActiveOrders)
 routes.get('/dashboard/getPedidosConcluidos', OrdersController.getConcludedOrders)
 routes.get('/dashboard/getMenuTopItens', OrdersController.getTopMenuItems);
 routes.get('/dashboard/getMesasTopVendas', OrdersController.getTopSalesDesks);
-routes.post('/inicio/postPedido', OrdersController.postOrder);
-routes.post('/inicio/postPedidoItens', OrdersController.postOrderMenuItems);
 routes.get('/dashboard/getTotalEntradas', GainsController.getTotalGains);
 routes.get('/dashboard/getTotalSaidas', ExpensesController.getTotalExpenses);
+routes.post('/inicio/postPedido', OrdersController.postOrder);
+routes.post('/inicio/postPedidoItens', OrdersController.postOrderMenuItems);
+routes.post('/dashboard/postAtualizaPedidoAtivoConcluido', OrdersController.updateActiveOrderToConcluded);
 
 module.exports = routes;

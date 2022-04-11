@@ -14,6 +14,7 @@ const queryInsertOrder = 'INSERT INTO public."Orders"("employeeCpf", "deskDescri
 const queryInsertMenuItemOrder = 'INSERT INTO public."OrderMenuItems"("orderId", "itemId", "itemQuantity")' +
     ' VALUES ($1, $2, $3);'
 const querySelectLastOrder = 'SELECT "orderId" FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
+const queryConcludeActiveOrder = 'UPDATE public."Orders" SET concluded=true WHERE "orderId"=$1;'
 
 class OrdersController {
 
@@ -99,6 +100,16 @@ class OrdersController {
         try {
             const values = [req.body.orderId, req.body.itemId, req.body.itemQuantity]
             await client.query(queryInsertMenuItemOrder, values)
+            res.send({
+                sucess: true
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async updateActiveOrderToConcluded(req, res) {
+        try {
+            await client.query(queryConcludeActiveOrder, [req.body.orderId])
             res.send({
                 sucess: true
             })
