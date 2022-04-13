@@ -32,6 +32,7 @@ routes.get('/usuarios/getUsuarios', UserController.getUsuarios);
 routes.post('/usuarios/authUsuarios', UserController.authUsuario);
 routes.post('/usuario/postUsuario', UserController.postUser);
 
+//Routes for orders
 routes.get('/dashboard/getPedidosTotal', OrdersController.getTotalOrders)
 routes.get('/dashboard/getPedidosAtivos', OrdersController.getActiveOrders)
 routes.get('/dashboard/getPedidosConcluidos', OrdersController.getConcludedOrders)
@@ -39,8 +40,10 @@ routes.get('/dashboard/getMenuTopItens', OrdersController.getTopMenuItems);
 routes.get('/dashboard/getMesasTopVendas', OrdersController.getTopSalesDesks);
 routes.get('/dashboard/getTotalEntradas', GainsController.getTotalGains);
 routes.get('/dashboard/getTotalSaidas', ExpensesController.getTotalExpenses);
+routes.get('/inicio/getItensComPedidoId', OrdersController.getItemsWithOrderId);
 routes.post('/inicio/postPedido', OrdersController.postOrder);
 routes.post('/inicio/postPedidoItens', OrdersController.postOrderMenuItems);
+routes.post('/inicio/updatePedidoItens', OrdersController.updateOrderMenuItems);
 routes.post('/dashboard/postAtualizaPedidoAtivoConcluido', OrdersController.updateActiveOrderToConcluded);
 
 module.exports = routes;

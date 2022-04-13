@@ -15,6 +15,9 @@ const queryInsertMenuItemOrder = 'INSERT INTO public."OrderMenuItems"("orderId",
     ' VALUES ($1, $2, $3);'
 const querySelectLastOrder = 'SELECT "orderId" FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const queryConcludeActiveOrder = 'UPDATE public."Orders" SET concluded=true WHERE "orderId"=$1;'
+const queryGetItemsWithOrderId = 'SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" ' +
+    'FROM public."MenuItem" INNER JOIN "OrderMenuItems" ON "OrderMenuItems"."orderId" = $1 WHERE "MenuItem"."itemId" = "OrderMenuItems"."itemId";'
+const queryUpdateOrderMenuItems = 'UPDATE public."OrderMenuItems" SET "itemQuantity"=$1 WHERE "orderId"= $2;'
 
 class OrdersController {
 
@@ -83,6 +86,19 @@ class OrdersController {
         }
     }
 
+    async getItemsWithOrderId(req, res) {
+        try {
+            const values = [req.query.orderId]
+            const dbRes = await client.query(queryGetItemsWithOrderId, values)
+            res.send({
+                success: true,
+                data: dbRes.rows
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async postOrder(req, res) {
         try {
             const values = [req.body.employeeCpf, req.body.deskDescription, req.body.concluded, req.body.businessCnpj, req.body.dateTimeOrder]
@@ -110,6 +126,18 @@ class OrdersController {
     async updateActiveOrderToConcluded(req, res) {
         try {
             await client.query(queryConcludeActiveOrder, [req.body.orderId])
+            res.send({
+                sucess: true
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async updateOrderMenuItems(req, res) {
+        try {
+            const values = [req.body.itemQuantity, req.body.orderId]
+            console.log(values)
+            await client.query(queryUpdateOrderMenuItems, values)
             res.send({
                 sucess: true
             })
