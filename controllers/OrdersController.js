@@ -13,6 +13,7 @@ const queryInsertOrder = 'INSERT INTO public."Orders"("employeeCpf", "deskDescri
     ' VALUES($1, $2, $3, $4, $5); '
 const queryInsertMenuItemOrder = 'INSERT INTO public."OrderMenuItems"("orderId", "itemId", "itemQuantity")' +
     ' VALUES ($1, $2, $3);'
+const queryDeleteAllMenuItemsFromOrderID = `DELETE FROM public."OrderMenuItems" WHERE "orderId" = $1;`
 const querySelectLastOrder = 'SELECT "orderId" FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const queryConcludeActiveOrder = 'UPDATE public."Orders" SET concluded=true WHERE "orderId"=$1;'
 const queryGetItemsWithOrderId = 'SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" ' +
@@ -135,9 +136,12 @@ class OrdersController {
     }
     async updateOrderMenuItems(req, res) {
         try {
-            const values = [req.body.itemQuantity, req.body.orderId]
-            console.log(values)
-            await client.query(queryUpdateOrderMenuItems, values)
+            const { orderId, items } = req.body
+            await client.query(queryDeleteAllMenuItemsFromOrderID, [orderId])
+            for (const item of items) {
+                await client.query(queryInsertMenuItemOrder, [orderId, item.itemId, item.quantity])
+            }
+            // await client.query(queryUpdateOrderMenuItems, values)
             res.send({
                 sucess: true
             })
