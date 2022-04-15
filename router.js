@@ -7,7 +7,8 @@ const BusinessController = require('./controllers/BusinessController');
 const UserController = require('./controllers/UserController');
 const GainsController = require('./controllers/GainsController');
 const ExpensesController = require('./controllers/ExpensesController');
-const OrdersController = require('./controllers/OrdersController')
+const OrdersController = require('./controllers/OrdersController');
+const ProvidersController = require('./controllers/ProvidersController');
 
 const routes = express.Router();
 
@@ -36,8 +37,6 @@ routes.post('/usuario/postUsuario', UserController.postUser);
 routes.get('/dashboard/getPedidosTotal', OrdersController.getTotalOrders)
 routes.get('/dashboard/getPedidosAtivos', OrdersController.getActiveOrders)
 routes.get('/dashboard/getPedidosConcluidos', OrdersController.getConcludedOrders)
-routes.get('/dashboard/getMenuTopItens', OrdersController.getTopMenuItems);
-routes.get('/dashboard/getMesasTopVendas', OrdersController.getTopSalesDesks);
 routes.get('/dashboard/getTotalEntradas', GainsController.getTotalGains);
 routes.get('/dashboard/getTotalSaidas', ExpensesController.getTotalExpenses);
 routes.get('/inicio/getItensComPedidoId', OrdersController.getItemsWithOrderId);
@@ -45,5 +44,8 @@ routes.post('/inicio/postPedido', OrdersController.postOrder);
 routes.post('/inicio/postPedidoItens', OrdersController.postOrderMenuItems);
 routes.post('/inicio/updatePedidoItens', OrdersController.updateOrderMenuItems);
 routes.post('/dashboard/postAtualizaPedidoAtivoConcluido', OrdersController.updateActiveOrderToConcluded);
+
+//Routes for Providers
+routes.get('/fornecedores/getFornecedores', ProvidersController.getProviders);
 
 module.exports = routes;
