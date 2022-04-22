@@ -9,6 +9,7 @@ const GainsController = require('./controllers/GainsController');
 const ExpensesController = require('./controllers/ExpensesController');
 const OrdersController = require('./controllers/OrdersController');
 const ProvidersController = require('./controllers/ProvidersController');
+const ProductsController = require('./controllers/ProductsController');
 
 const routes = express.Router();
 
@@ -47,5 +48,9 @@ routes.post('/dashboard/postAtualizaPedidoAtivoConcluido', OrdersController.upda
 
 //Routes for Providers
 routes.get('/fornecedores/getFornecedores', ProvidersController.getProviders);
+
+//Routes for Products
+routes.get('/produtos/getProdutos', ProductsController.getProducts)
+routes.post('/produtos/postProduto', ProductsController.postProduct)
 
 module.exports = routes;

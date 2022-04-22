@@ -74,7 +74,7 @@ class OrdersController {
             await client.query(queryInsertOrder, values)
             const dbRes = await client.query(querySelectLastOrder, [req.body.businessCnpj])
             res.send({
-                sucess: true,
+                success: true,
                 orderId: dbRes.rows[0].orderId
             })
         } catch (error) {
@@ -86,7 +86,7 @@ class OrdersController {
             const values = [req.body.orderId, req.body.itemId, req.body.itemQuantity]
             await client.query(queryInsertMenuItemOrder, values)
             res.send({
-                sucess: true
+                success: true
             })
         } catch (error) {
             console.log(error);
@@ -96,7 +96,7 @@ class OrdersController {
         try {
             await client.query(queryConcludeActiveOrder, [req.body.orderId])
             res.send({
-                sucess: true
+                success: true
             })
         } catch (error) {
             console.log(error);
@@ -111,7 +111,7 @@ class OrdersController {
             }
             // await client.query(queryUpdateOrderMenuItems, values)
             res.send({
-                sucess: true
+                success: true
             })
         } catch (error) {
             console.log(error);
