@@ -48,6 +48,7 @@ routes.post('/dashboard/postAtualizaPedidoAtivoConcluido', OrdersController.upda
 
 //Routes for Providers
 routes.get('/fornecedores/getFornecedores', ProvidersController.getProviders);
+routes.post('/fornecedores/postFornecedor', ProvidersController.postProvider)
 
 //Routes for Products
 routes.get('/produtos/getProdutos', ProductsController.getProducts)
