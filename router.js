@@ -54,6 +54,7 @@ routes.post('/fornecedores/postFornecedor', ProvidersController.postProvider)
 //Routes for Products
 routes.get('/produtos/getProdutos', ProductsController.getProducts)
 routes.post('/produtos/postProduto', ProductsController.postProduct)
+routes.put('/produtos/updateEstoqueAtualProduto', ProductsController.updateProductCurrentStock)
 
 //Routes for purchases
 routes.post('/compras/postCompra', PurchasesController.postPurchase)
