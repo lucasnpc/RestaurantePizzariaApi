@@ -10,6 +10,7 @@ const ExpensesController = require('./controllers/ExpensesController');
 const OrdersController = require('./controllers/OrdersController');
 const ProvidersController = require('./controllers/ProvidersController');
 const ProductsController = require('./controllers/ProductsController');
+const PurchasesController = require('./controllers/PurchasesController');
 
 const routes = express.Router();
 
@@ -53,5 +54,8 @@ routes.post('/fornecedores/postFornecedor', ProvidersController.postProvider)
 //Routes for Products
 routes.get('/produtos/getProdutos', ProductsController.getProducts)
 routes.post('/produtos/postProduto', ProductsController.postProduct)
+
+//Routes for purchases
+routes.post('/compras/postCompra', PurchasesController.postPurchase)
 
 module.exports = routes;
