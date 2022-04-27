@@ -12,7 +12,6 @@ const querySelectLastOrder = 'SELECT "orderId" FROM public."Orders" WHERE "busin
 const queryConcludeActiveOrder = 'UPDATE public."Orders" SET concluded=true WHERE "orderId"=$1;'
 const queryGetItemsWithOrderId = 'SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" ' +
     'FROM public."MenuItem" INNER JOIN "OrderMenuItems" ON "OrderMenuItems"."orderId" = $1 WHERE "MenuItem"."itemId" = "OrderMenuItems"."itemId";'
-const queryUpdateOrderMenuItems = 'UPDATE public."OrderMenuItems" SET "itemQuantity"=$1 WHERE "orderId"= $2;'
 
 class OrdersController {
 
@@ -109,7 +108,6 @@ class OrdersController {
             for (const item of items) {
                 await client.query(queryInsertMenuItemOrder, [orderId, item.itemId, item.quantity])
             }
-            // await client.query(queryUpdateOrderMenuItems, values)
             res.send({
                 success: true
             })
