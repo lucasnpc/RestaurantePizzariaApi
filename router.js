@@ -17,6 +17,7 @@ const routes = express.Router();
 routes.get("/itens/getItem", MenuItemController.getItens);
 routes.get("/itens/getItemCount", MenuItemController.getItemCount);
 routes.post("/itens/postItem", MenuItemController.postItem);
+routes.post("/itens/postProdutoItem", MenuItemController.postMenuItemProduct)
 
 routes.get('/caixa/getEntradas', GainsController.getGains);
 routes.get('/caixa/getSaidas', ExpensesController.getExpenses);
