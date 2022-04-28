@@ -12,9 +12,18 @@ const queryInsertOrder = 'INSERT INTO public."Orders"("employeeCpf", "deskDescri
     ' VALUES($1, $2, $3, $4, $5); '
 const queryInsertMenuItemOrder = 'INSERT INTO public."OrderMenuItems"("orderId", "itemId", "itemQuantity")' +
     ' VALUES ($1, $2, $3);'
-    
+
 const queryDeleteAllMenuItemsFromOrderID = `DELETE FROM public."OrderMenuItems" WHERE "orderId" = $1;`
 
+const queryGetAllOrderMenusItemsByOrderId = `SELECT "orderId", "itemId", "itemQuantity"
+FROM public."OrderMenuItems" WHERE "orderId"=$1;`
+
+const queryGetAllItemsByItemId = `SELECT "itemId", "productId", "productQuantity"
+FROM public."MenuItemProducts" WHERE "itemId"=$1;`
+
+const queryUpdateProductStock = `UPDATE public."Product" SET "currentStock"=$1 WHERE "productId"=$2;`
+
+const queryGetProductByProductId = `SELECT * FROM public."Product" WHERE "productId" = $1`
 
 class OrdersController {
 
@@ -97,6 +106,7 @@ class OrdersController {
     async updateActiveOrderToConcluded(req, res) {
         try {
             await client.query(queryConcludeActiveOrder, [req.body.orderId])
+            await removeProductsFromStorage(req.body.orderId)
             res.send({
                 success: true
             })
@@ -117,6 +127,31 @@ class OrdersController {
         } catch (error) {
             console.log(error);
         }
+    }
+
+}
+
+async function removeProductsFromStorage(orderId) {
+    const result = await client.query(queryGetAllOrderMenusItemsByOrderId, [orderId])
+    for (const item of result.rows) {
+        const { rows: products } = await client.query(queryGetAllItemsByItemId, [item.itemId])
+
+        await updateProductsQuantity(products, Number(item.itemQuantity))
+    }
+}
+
+async function updateProductsQuantity(products, quantity) {
+    for (const product of products) {
+        const { rows } = await client.query(queryGetProductByProductId, [product.productId])
+
+        const currentProduct = rows[0]
+        let newQuantity = Number(currentProduct.currentStock) - (Number(product.productQuantity) * quantity)
+
+        if (newQuantity < 0) {
+            newQuantity = 0
+        }
+
+        await client.query(queryUpdateProductStock, [newQuantity, product.productId])
     }
 }
 
