@@ -5,6 +5,8 @@ const queryInsertClient = 'INSERT INTO public."Client"(name, street, "number", d
     'VALUES ($1, $2, $3, $4, $5, $6, $7);'
 const queryUpdateClient = `UPDATE public."Client" SET name=$2, street=$3, "number"=$4, district=$5, city=$6, phone=$7, "businessCnpj"=$8
 	WHERE "clientId"=$1;`
+const queryDeleteClient = `DELETE FROM public."Client"
+	WHERE "clientId"=$1;`
 
 class ClientController {
     async getCustomers(req, res) {
@@ -34,6 +36,17 @@ class ClientController {
         res.send({
             success: true
         });
+    }
+    async deleteCustomer(req, res) {
+        try {
+            const values = [req.query.id]
+            await client.query(queryDeleteClient, values)
+            res.send({
+                success: true
+            })
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

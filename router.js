@@ -28,11 +28,13 @@ routes.post('/caixa/postSaida', ExpensesController.postExpense);
 routes.get('/clientes/getClientes', ClientController.getCustomers);
 routes.post('/clientes/postCliente', ClientController.postCustomer)
 routes.put('/clientes/putCliente', ClientController.putCustomer)
+routes.delete('/clientes/deleteCliente', ClientController.deleteCustomer)
 
 //Routes for Employees
 routes.get('/funcionarios/getFuncionarios', EmployeeController.getEmployees);
 routes.post('/funcionarios/postFuncionario', EmployeeController.postEmployee);
 routes.put('/funcionarios/putFuncionario', EmployeeController.updateEmployee)
+routes.delete('/funcionarios/deleteFuncionario', EmployeeController.unactivateEmployee )
 
 routes.post('/negocios/postNegocio', BusinessController.postBusiness);
 
@@ -56,6 +58,7 @@ routes.post('/dashboard/postAtualizaPedidoAtivoConcluido', OrdersController.upda
 routes.get('/fornecedores/getFornecedores', ProvidersController.getProviders);
 routes.post('/fornecedores/postFornecedor', ProvidersController.postProvider)
 routes.put('/fornecedores/putFornecedor', ProvidersController.updateProvider)
+routes.delete('/fornecedores/deleteFornecedor', ProvidersController.disableProvider)
 
 //Routes for Products
 routes.get('/produtos/getProdutos', ProductsController.getProducts)
