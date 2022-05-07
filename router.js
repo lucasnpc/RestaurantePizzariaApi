@@ -11,6 +11,7 @@ const OrdersController = require('./controllers/OrdersController');
 const ProvidersController = require('./controllers/ProvidersController');
 const ProductsController = require('./controllers/ProductsController');
 const PurchasesController = require('./controllers/PurchasesController');
+const KitchenController = require('./controllers/KitchenController');
 
 const routes = express.Router();
 
@@ -34,7 +35,7 @@ routes.delete('/clientes/deleteCliente', ClientController.deleteCustomer)
 routes.get('/funcionarios/getFuncionarios', EmployeeController.getEmployees);
 routes.post('/funcionarios/postFuncionario', EmployeeController.postEmployee);
 routes.put('/funcionarios/putFuncionario', EmployeeController.updateEmployee)
-routes.delete('/funcionarios/deleteFuncionario', EmployeeController.unactivateEmployee )
+routes.delete('/funcionarios/deleteFuncionario', EmployeeController.unactivateEmployee)
 
 routes.post('/negocios/postNegocio', BusinessController.postBusiness);
 
@@ -50,7 +51,8 @@ routes.get('/dashboard/getTotalEntradas', GainsController.getTotalGains);
 routes.get('/dashboard/getTotalSaidas', ExpensesController.getTotalExpenses);
 routes.get('/inicio/getItensComPedidoId', OrdersController.getItemsWithOrderId);
 routes.post('/inicio/postPedido', OrdersController.postOrder);
-routes.post('/inicio/postPedidoItens', OrdersController.postOrderMenuItems);
+routes.post('/inicio/postPedidoCliente', OrdersController.postClientOrder);
+routes.post('/inicio/postItensPedidosCliente', OrdersController.postClientOrdersItems);
 routes.post('/inicio/updatePedidoItens', OrdersController.updateOrderMenuItems);
 routes.post('/dashboard/postAtualizaPedidoAtivoConcluido', OrdersController.updateActiveOrderToConcluded);
 
@@ -67,5 +69,8 @@ routes.put('/produtos/updateEstoqueAtualProduto', ProductsController.updateProdu
 
 //Routes for purchases
 routes.post('/compras/postCompra', PurchasesController.postPurchase)
+
+//Routes for Kitchen
+routes.get('/cozinha/getPedidosEnviados', KitchenController.getSentClientOrders)
 
 module.exports = routes;

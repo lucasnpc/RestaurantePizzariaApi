@@ -3,27 +3,27 @@ const client = require('../database')
 const getTotalOrdersQuery = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1'
 const getActiveOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = false AND "businessCnpj" = $1;'
 const getConcludedOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = true AND "businessCnpj" = $1;'
-const querySelectLastOrder = 'SELECT "orderId" FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
-const queryConcludeActiveOrder = 'UPDATE public."Orders" SET concluded=true WHERE "orderId"=$1;'
+const querySelectLastOrder = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
+const querySelectLastClientOrder = 'SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const queryGetItemsWithOrderId = 'SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" ' +
     'FROM public."MenuItem" INNER JOIN "OrderMenuItems" ON "OrderMenuItems"."orderId" = $1 WHERE "MenuItem"."itemId" = "OrderMenuItems"."itemId";'
+const queryGetProductByProductId = `SELECT * FROM public."Product" WHERE "productId" = $1`
+const queryGetAllOrderMenusItemsByOrderId = `SELECT "orderId", "itemId", "itemQuantity"
+    FROM public."OrderMenuItems" WHERE "orderId"=$1;`
+const queryGetAllItemsByItemId = `SELECT "itemId", "productId", "productQuantity"
+    FROM public."MenuItemProducts" WHERE "itemId"=$1;`
 
 const queryInsertOrder = 'INSERT INTO public."Orders"("employeeCpf", "deskDescription", concluded, "businessCnpj", "dateTimeOrder")' +
     ' VALUES($1, $2, $3, $4, $5); '
-const queryInsertMenuItemOrder = 'INSERT INTO public."OrderMenuItems"("orderId", "itemId", "itemQuantity")' +
-    ' VALUES ($1, $2, $3);'
-
-const queryDeleteAllMenuItemsFromOrderID = `DELETE FROM public."OrderMenuItems" WHERE "orderId" = $1;`
-
-const queryGetAllOrderMenusItemsByOrderId = `SELECT "orderId", "itemId", "itemQuantity"
-FROM public."OrderMenuItems" WHERE "orderId"=$1;`
-
-const queryGetAllItemsByItemId = `SELECT "itemId", "productId", "productQuantity"
-FROM public."MenuItemProducts" WHERE "itemId"=$1;`
+const queryInsertClientOrder = `INSERT INTO public."ClientOrders"("orderId")
+	VALUES ($1);`
+const queryInsertClientOrdersItems = `INSERT INTO public."ClientOrdersItems"(
+	"clientOrderId", "itemId", "itemQuantity", "orderStatus")
+	VALUES ($1, $2, $3, $4);;`
 
 const queryUpdateProductStock = `UPDATE public."Product" SET "currentStock"=$1 WHERE "productId"=$2;`
-
-const queryGetProductByProductId = `SELECT * FROM public."Product" WHERE "productId" = $1`
+const queryDeleteAllMenuItemsFromOrderID = `DELETE FROM public."OrderMenuItems" WHERE "orderId" = $1;`
+const queryConcludeActiveOrder = 'UPDATE public."Orders" SET concluded=true WHERE "orderId"=$1;'
 
 class OrdersController {
 
@@ -86,16 +86,29 @@ class OrdersController {
             const dbRes = await client.query(querySelectLastOrder, [req.body.businessCnpj])
             res.send({
                 success: true,
-                orderId: dbRes.rows[0].orderId
+                data: dbRes.rows[0]
             })
         } catch (error) {
             console.log(error);
         }
     }
-    async postOrderMenuItems(req, res) {
+    async postClientOrder(req, res) {
         try {
-            const values = [req.body.orderId, req.body.itemId, req.body.itemQuantity]
-            await client.query(queryInsertMenuItemOrder, values)
+            const values = [req.body.orderId]
+            await client.query(queryInsertClientOrder, values)
+            const dbRes = await client.query(querySelectLastClientOrder, [req.body.orderId])
+            res.send({
+                success: true,
+                id: dbRes.rows[0].clientOrderId
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async postClientOrdersItems(req, res) {
+        try {
+            const values = [req.body.clientOrderId, req.body.itemId, req.body.itemQuantity, req.body.orderStatus]
+            await client.query(queryInsertClientOrdersItems, values)
             res.send({
                 success: true
             })
@@ -119,7 +132,7 @@ class OrdersController {
             const { orderId, items } = req.body
             await client.query(queryDeleteAllMenuItemsFromOrderID, [orderId])
             for (const item of items) {
-                await client.query(queryInsertMenuItemOrder, [orderId, item.itemId, item.quantity])
+                await client.query(queryInsertClientOrder, [orderId, item.itemId, item.quantity])
             }
             res.send({
                 success: true
