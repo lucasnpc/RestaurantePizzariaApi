@@ -49,7 +49,8 @@ routes.get('/dashboard/getPedidosAtivos', OrdersController.getActiveOrders)
 routes.get('/dashboard/getPedidosConcluidos', OrdersController.getConcludedOrders)
 routes.get('/dashboard/getTotalEntradas', GainsController.getTotalGains);
 routes.get('/dashboard/getTotalSaidas', ExpensesController.getTotalExpenses);
-routes.get('/inicio/getPedidosCliente', OrdersController.getClientOders);
+routes.get('/inicio/getMesasOcupadas', OrdersController.getOccupiedDesks);
+routes.get('/inicio/getPedidosClienteComPedidoId', OrdersController.getClientOrdersWithOrderId);
 routes.get('/inicio/getItensComPedidoClienteId', OrdersController.getItemsWithClientOrderId);
 routes.post('/inicio/postPedido', OrdersController.postOrder);
 routes.post('/inicio/postPedidoCliente', OrdersController.postClientOrder);
@@ -73,5 +74,7 @@ routes.post('/compras/postCompra', PurchasesController.postPurchase)
 
 //Routes for Kitchen
 routes.get('/cozinha/getPedidosEnviados', KitchenController.getSentClientOrders)
+routes.put('/cozinha/updatePedidoStatus', KitchenController.updateOrderStatus)
+
 
 module.exports = routes;

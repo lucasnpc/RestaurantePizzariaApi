@@ -5,7 +5,9 @@ const getActiveOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = fa
 const getConcludedOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = true AND "businessCnpj" = $1;'
 const querySelectLastOrder = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const querySelectLastClientOrder = 'SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId" = $1 ORDER BY "orderId" DESC LIMIT 1;'
-const queryGetClientOrders = `SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId"=$1;`
+const getOccupiedDesks = `SELECT "deskDescription" FROM public."Orders" INNER JOIN "ClientOrders" 
+ON "Orders"."orderId" = "ClientOrders"."orderId" GROUP BY "deskDescription";`
+const queryGetClientOrdersWithOrderId = `SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId"=$1;`
 const queryItemsWithClientOrderId = `SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" 
 FROM public."MenuItem" INNER JOIN "ClientOrdersItems" ON "ClientOrdersItems"."clientOrderId" = $1 WHERE "MenuItem"."itemId" = "ClientOrdersItems"."itemId";`
 const queryGetProductByProductId = `SELECT * FROM public."Product" WHERE "productId" = $1`
@@ -67,10 +69,21 @@ class OrdersController {
         }
     }
 
-    async getClientOders(req, res) {
+    async getOccupiedDesks(req, res) {
+        try {
+            const dbRes = await client.query(getOccupiedDesks)
+            res.send({
+                success: true,
+                data: dbRes.rows
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async getClientOrdersWithOrderId(req, res) {
         try {
             const values = [req.query.orderId]
-            const dbRes = await client.query(queryGetClientOrders, values)
+            const dbRes = await client.query(queryGetClientOrdersWithOrderId, values)
             res.send({
                 success: true,
                 data: dbRes.rows
