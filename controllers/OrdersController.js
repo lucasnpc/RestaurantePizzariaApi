@@ -5,8 +5,9 @@ const getActiveOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = fa
 const getConcludedOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = true AND "businessCnpj" = $1;'
 const querySelectLastOrder = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const querySelectLastClientOrder = 'SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId" = $1 ORDER BY "orderId" DESC LIMIT 1;'
-const queryGetItemsWithOrderId = 'SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" ' +
-    'FROM public."MenuItem" INNER JOIN "OrderMenuItems" ON "OrderMenuItems"."orderId" = $1 WHERE "MenuItem"."itemId" = "OrderMenuItems"."itemId";'
+const queryGetClientOrders = `SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId"=$1;`
+const queryItemsWithClientOrderId = `SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" 
+FROM public."MenuItem" INNER JOIN "ClientOrdersItems" ON "ClientOrdersItems"."clientOrderId" = $1 WHERE "MenuItem"."itemId" = "ClientOrdersItems"."itemId";`
 const queryGetProductByProductId = `SELECT * FROM public."Product" WHERE "productId" = $1`
 const queryGetAllOrderMenusItemsByOrderId = `SELECT "orderId", "itemId", "itemQuantity"
     FROM public."OrderMenuItems" WHERE "orderId"=$1;`
@@ -66,10 +67,23 @@ class OrdersController {
         }
     }
 
-    async getItemsWithOrderId(req, res) {
+    async getClientOders(req, res) {
         try {
             const values = [req.query.orderId]
-            const dbRes = await client.query(queryGetItemsWithOrderId, values)
+            const dbRes = await client.query(queryGetClientOrders, values)
+            res.send({
+                success: true,
+                data: dbRes.rows
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async getItemsWithClientOrderId(req, res) {
+        try {
+            const values = [req.query.clientOrderId]
+            const dbRes = await client.query(queryItemsWithClientOrderId, values)
             res.send({
                 success: true,
                 data: dbRes.rows

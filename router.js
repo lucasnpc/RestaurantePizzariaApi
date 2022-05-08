@@ -49,7 +49,8 @@ routes.get('/dashboard/getPedidosAtivos', OrdersController.getActiveOrders)
 routes.get('/dashboard/getPedidosConcluidos', OrdersController.getConcludedOrders)
 routes.get('/dashboard/getTotalEntradas', GainsController.getTotalGains);
 routes.get('/dashboard/getTotalSaidas', ExpensesController.getTotalExpenses);
-routes.get('/inicio/getItensComPedidoId', OrdersController.getItemsWithOrderId);
+routes.get('/inicio/getPedidosCliente', OrdersController.getClientOders);
+routes.get('/inicio/getItensComPedidoClienteId', OrdersController.getItemsWithClientOrderId);
 routes.post('/inicio/postPedido', OrdersController.postOrder);
 routes.post('/inicio/postPedidoCliente', OrdersController.postClientOrder);
 routes.post('/inicio/postItensPedidosCliente', OrdersController.postClientOrdersItems);

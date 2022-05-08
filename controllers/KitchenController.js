@@ -2,7 +2,7 @@ const client = require('../database')
 
 const querySentClientOrders = `SELECT "deskDescription", "ClientOrdersItems"."clientOrderId" FROM public."Orders" INNER JOIN "ClientOrders" 
 ON "ClientOrders"."orderId" = "Orders"."orderId" INNER JOIN "ClientOrdersItems" ON "ClientOrders"."clientOrderId" = "ClientOrdersItems"."clientOrderId"
-WHERE "orderStatus"='enviado';`
+WHERE "orderStatus"='enviado' OR "orderStatus"='preparando' GROUP BY "deskDescription", "ClientOrdersItems"."clientOrderId";`
 
 class KitchenController {
 
