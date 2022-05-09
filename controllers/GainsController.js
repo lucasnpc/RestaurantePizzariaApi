@@ -1,8 +1,8 @@
 const client = require('../database')
 
 const getGainsQuery = 'SELECT * FROM public."Gains" WHERE "businessCnpj" = $1'
-const queryInsertInflow = 'INSERT INTO public."Gains"("deskDescription", "menuItems", value, "paymentWay", "gainDate", "employeeCpf",' +
-    '"additionalValue", "businessCnpj") VALUES ($1, $2, $3, $4, $5, $6, $7, $8);'
+const queryInsertGain = `INSERT INTO public."Gains"(
+	value, "paymentWay", "gainDate", "additionalValue", "businessCnpj") VALUES ($1, $2, $3, $4, $5);`
 const getTotalGainsQuery = 'SELECT SUM(value) as total FROM public."Gains" WHERE "businessCnpj" = $1;'
 
 class GainsController {
@@ -35,9 +35,9 @@ class GainsController {
 
     async postGain(req, res) {
         try {
-            const values = [req.body.deskDescription, req.body.menuItems, req.body.value, req.body.paymentWay, req.body.gainDate,
-            req.body.employeeCpf, req.body.additionalValue, req.body.businessCnpj];
-            await client.query(queryInsertInflow, values)
+            const values = [req.body.value, req.body.paymentWay, req.body.gainDate,
+            req.body.additionalValue, req.body.businessCnpj];
+            await client.query(queryInsertGain, values)
             res.send({
                 success: true
             });

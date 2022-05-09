@@ -1,3 +1,4 @@
+const res = require('express/lib/response')
 const client = require('../database')
 
 const getTotalOrdersQuery = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1'
@@ -6,13 +7,14 @@ const getConcludedOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded =
 const querySelectLastOrder = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const querySelectLastClientOrder = 'SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const getOccupiedDesks = `SELECT "deskDescription" FROM public."Orders" INNER JOIN "ClientOrders" 
-ON "Orders"."orderId" = "ClientOrders"."orderId" GROUP BY "deskDescription";`
+ON "Orders"."orderId" = "ClientOrders"."orderId" WHERE concluded=false GROUP BY "deskDescription";`
 const queryGetClientOrdersWithOrderId = `SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId"=$1;`
-const queryItemsWithClientOrderId = `SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" 
+const queryGetItemsWithClientOrderId = `SELECT "MenuItem"."itemId", price, description, "businessCnpj", "itemQuantity" 
 FROM public."MenuItem" INNER JOIN "ClientOrdersItems" ON "ClientOrdersItems"."clientOrderId" = $1 WHERE "MenuItem"."itemId" = "ClientOrdersItems"."itemId";`
 const queryGetProductByProductId = `SELECT * FROM public."Product" WHERE "productId" = $1`
-const queryGetAllOrderMenusItemsByOrderId = `SELECT "orderId", "itemId", "itemQuantity"
-    FROM public."OrderMenuItems" WHERE "orderId"=$1;`
+const queryGetAllClientOrdersByOrderId = `SELECT "ClientOrders"."clientOrderId", "itemId", "itemQuantity", "orderStatus" 
+FROM public."ClientOrdersItems" INNER JOIN "ClientOrders" ON "ClientOrders"."clientOrderId" = "ClientOrdersItems"."clientOrderId" 
+WHERE "ClientOrders"."orderId"=$1;`
 const queryGetAllItemsByItemId = `SELECT "itemId", "productId", "productQuantity"
     FROM public."MenuItemProducts" WHERE "itemId"=$1;`
 
@@ -20,12 +22,13 @@ const queryInsertOrder = 'INSERT INTO public."Orders"("employeeCpf", "deskDescri
     ' VALUES($1, $2, $3, $4, $5); '
 const queryInsertClientOrder = `INSERT INTO public."ClientOrders"("orderId")
 	VALUES ($1);`
+
 const queryInsertClientOrdersItems = `INSERT INTO public."ClientOrdersItems"(
 	"clientOrderId", "itemId", "itemQuantity", "orderStatus")
 	VALUES ($1, $2, $3, $4);;`
 
 const queryUpdateProductStock = `UPDATE public."Product" SET "currentStock"=$1 WHERE "productId"=$2;`
-const queryDeleteAllMenuItemsFromOrderID = `DELETE FROM public."OrderMenuItems" WHERE "orderId" = $1;`
+const queryDeleteAllMenuItemsFromOrderID = `DELETE FROM public."ClientOrdersItems"" WHERE "clientOrderId" = $1;`
 const queryConcludeActiveOrder = 'UPDATE public."Orders" SET concluded=true WHERE "orderId"=$1;'
 
 class OrdersController {
@@ -96,7 +99,7 @@ class OrdersController {
     async getItemsWithClientOrderId(req, res) {
         try {
             const values = [req.query.clientOrderId]
-            const dbRes = await client.query(queryItemsWithClientOrderId, values)
+            const dbRes = await client.query(queryGetItemsWithClientOrderId, values)
             res.send({
                 success: true,
                 data: dbRes.rows
@@ -157,7 +160,8 @@ class OrdersController {
     async updateOrderMenuItems(req, res) {
         try {
             const { orderId, items } = req.body
-            await client.query(queryDeleteAllMenuItemsFromOrderID, [orderId])
+            const result = await client.query(queryGetAllClientOrdersByOrderId, [orderId])
+            console.log('Todo update client order items');
             for (const item of items) {
                 await client.query(queryInsertClientOrder, [orderId, item.itemId, item.quantity])
             }
@@ -172,7 +176,8 @@ class OrdersController {
 }
 
 async function removeProductsFromStorage(orderId) {
-    const result = await client.query(queryGetAllOrderMenusItemsByOrderId, [orderId])
+    const result = await client.query(queryGetAllClientOrdersByOrderId, [orderId])
+    
     for (const item of result.rows) {
         const { rows: products } = await client.query(queryGetAllItemsByItemId, [item.itemId])
 
