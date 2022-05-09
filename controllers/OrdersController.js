@@ -28,8 +28,9 @@ const queryInsertClientOrdersItems = `INSERT INTO public."ClientOrdersItems"(
 	VALUES ($1, $2, $3, $4);;`
 
 const queryUpdateProductStock = `UPDATE public."Product" SET "currentStock"=$1 WHERE "productId"=$2;`
-const queryDeleteAllMenuItemsFromOrderID = `DELETE FROM public."ClientOrdersItems"" WHERE "clientOrderId" = $1;`
 const queryConcludeActiveOrder = 'UPDATE public."Orders" SET concluded=true WHERE "orderId"=$1;'
+const queryUpdateClientOrderItems = `UPDATE public."ClientOrdersItems"
+SET  "itemQuantity"=$1 WHERE "clientOrderId"=$2;`
 
 class OrdersController {
 
@@ -161,9 +162,10 @@ class OrdersController {
         try {
             const { orderId, items } = req.body
             const result = await client.query(queryGetAllClientOrdersByOrderId, [orderId])
-            console.log('Todo update client order items');
-            for (const item of items) {
-                await client.query(queryInsertClientOrder, [orderId, item.itemId, item.quantity])
+            for (const row of result.rows) {
+                items.map(async i => {
+                    await client.query(queryUpdateClientOrderItems, [i.quantity, row.clientOrderId])
+                })
             }
             res.send({
                 success: true
@@ -177,7 +179,7 @@ class OrdersController {
 
 async function removeProductsFromStorage(orderId) {
     const result = await client.query(queryGetAllClientOrdersByOrderId, [orderId])
-    
+
     for (const item of result.rows) {
         const { rows: products } = await client.query(queryGetAllItemsByItemId, [item.itemId])
 
