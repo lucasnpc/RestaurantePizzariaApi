@@ -2,7 +2,8 @@ const client = require('../database')
 
 const querySentClientOrders = `SELECT "deskDescription", "ClientOrdersItems"."clientOrderId", "orderStatus" FROM public."Orders" INNER JOIN "ClientOrders" 
 ON "ClientOrders"."orderId" = "Orders"."orderId" INNER JOIN "ClientOrdersItems" ON "ClientOrders"."clientOrderId" = "ClientOrdersItems"."clientOrderId"
-WHERE "orderStatus"='enviado' OR "orderStatus"='preparando' GROUP BY "deskDescription", "ClientOrdersItems"."clientOrderId","orderStatus" ;`
+WHERE ("orderStatus"='enviado' OR "orderStatus"='preparando') AND "businessCnpj"=$1 
+GROUP BY "deskDescription", "ClientOrdersItems"."clientOrderId","orderStatus";`
 
 const queryUpdateOrderStatus = `UPDATE public."ClientOrdersItems" SET "orderStatus"=$1 WHERE "clientOrderId"=$2;`
 
@@ -10,7 +11,8 @@ class KitchenController {
 
     async getSentClientOrders(req, res) {
         try {
-            const dbRes = await client.query(querySentClientOrders)
+            const values = [req.query.businessCnpj]
+            const dbRes = await client.query(querySentClientOrders, values)
             res.send({
                 success: true,
                 data: dbRes.rows
