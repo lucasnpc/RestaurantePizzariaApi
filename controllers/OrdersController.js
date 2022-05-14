@@ -1,9 +1,9 @@
 const res = require('express/lib/response')
 const client = require('../database')
 
-const getTotalOrdersQuery = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1'
-const getActiveOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = false AND "businessCnpj" = $1;'
-const getConcludedOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = true AND "businessCnpj" = $1;'
+const getTotalOrdersQuery = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1 AND "dateTimeOrder"=$2;'
+const getActiveOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = false AND "businessCnpj" = $1 AND "dateTimeOrder"=$2;'
+const getConcludedOrdersQuery = 'SELECT * FROM public."Orders" WHERE concluded = true AND "businessCnpj" = $1 AND "dateTimeOrder"=$2;'
 const querySelectLastOrder = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const querySelectLastClientOrder = 'SELECT "clientOrderId" FROM public."ClientOrders" WHERE "orderId" = $1 ORDER BY "orderId" DESC LIMIT 1;'
 const getOccupiedDesks = `SELECT "deskDescription" FROM public."Orders" INNER JOIN "ClientOrders" 
@@ -36,7 +36,7 @@ class OrdersController {
 
     async getTotalOrders(req, res) {
         try {
-            const values = [req.query.businessCnpj]
+            const values = [req.query.businessCnpj, req.query.dateOrder]
             const dbRes = await client.query(getTotalOrdersQuery, values)
             res.send({
                 success: true,
@@ -49,7 +49,7 @@ class OrdersController {
 
     async getActiveOrders(req, res) {
         try {
-            const values = [req.query.businessCnpj]
+            const values = [req.query.businessCnpj, req.query.dateOrder]
             const dbRes = await client.query(getActiveOrdersQuery, values)
             res.send({
                 success: true,
@@ -62,7 +62,7 @@ class OrdersController {
 
     async getConcludedOrders(req, res) {
         try {
-            const values = [req.query.businessCnpj]
+            const values = [req.query.businessCnpj, req.query.dateOrder]
             const dbRes = await client.query(getConcludedOrdersQuery, values)
             res.send({
                 success: true,

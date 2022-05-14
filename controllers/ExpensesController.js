@@ -3,7 +3,7 @@ const client = require('../database')
 const getExpensesQuery = 'SELECT * FROM public."Expenses" WHERE "businessCnpj" = $1'
 const queryInsertExpense = 'INSERT INTO public."Expenses"(description, value, "expenseDate", "businessCnpj") ' +
     'VALUES ($1, $2, $3, $4);'
-const getTotalExpensesQuery = 'SELECT SUM(value) as total FROM public."Expenses" WHERE "businessCnpj" = $1;'
+const getTotalExpensesQuery = 'SELECT SUM(value) as total FROM public."Expenses" WHERE "businessCnpj" = $1 AND "expenseDate"=$2;'
 
 
 class ExpensesController {
@@ -22,7 +22,7 @@ class ExpensesController {
     }
     async getTotalExpenses(req, res) {
         try {
-            const values = [req.query.businessCnpj]
+            const values = [req.query.businessCnpj, req.query.dateExpense]
             const dbRes = await client.query(getTotalExpensesQuery, values)
             res.send({
                 success: true,
