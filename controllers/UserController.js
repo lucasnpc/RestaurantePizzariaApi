@@ -1,7 +1,7 @@
 const client = require('../database')
 
 const getUsersQuery = 'SELECT * FROM "Usuario" WHERE "businessCnpj" = $1;'
-const authUserQuery = 'SELECT * FROM public."User" WHERE "email" = $1 and password = $2;'
+const authUserQuery = 'SELECT email, "userType", "businessCnpj" FROM public."User" WHERE "email" = $1 and password = $2;'
 const queryInsertUser = 'INSERT INTO "User"("email", "password", "userType", "businessCnpj")' +
     'VALUES ($1, $2, $3, $4);'
 
