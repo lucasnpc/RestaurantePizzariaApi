@@ -12,6 +12,7 @@ const ProvidersController = require('./controllers/ProvidersController');
 const ProductsController = require('./controllers/ProductsController');
 const PurchasesController = require('./controllers/PurchasesController');
 const KitchenController = require('./controllers/KitchenController');
+const DesksController = require('./controllers/DesksController');
 
 const routes = express.Router();
 
@@ -76,5 +77,7 @@ routes.post('/compras/postCompra', PurchasesController.postPurchase)
 routes.get('/cozinha/getPedidosEnviados', KitchenController.getSentClientOrders)
 routes.put('/cozinha/updatePedidoStatus', KitchenController.updateOrderStatus)
 
+//Routes for Desks
+routes.get('/mesas/getMesas', DesksController.getDesks)
 
 module.exports = routes;

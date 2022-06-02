@@ -1,4 +1,3 @@
-const res = require('express/lib/response')
 const client = require('../database')
 
 const getTotalOrdersQuery = 'SELECT * FROM public."Orders" WHERE "businessCnpj" = $1 AND "dateTimeOrder"=$2;'

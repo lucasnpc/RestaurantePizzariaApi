@@ -27,4 +27,4 @@ app.use(function (err, req, res, next) {
     res.status(500).send('Aconteceu algum erro no servido! Error: ', err.stack);
 });
 
-app.listen(process.env.PORT || 8000);
+app.listen(process.env.PORT || port);
