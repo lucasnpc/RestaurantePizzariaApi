@@ -1,14 +1,20 @@
 const client = require('../database');
 
 queryPostPurchase = `INSERT INTO public."ProductPurchase"(
-	description, "quantityPurchased", "totalCostValue", "productId", "businessCnpj", "datePurchased")
-	VALUES ($1, $2, $3, $4, $5, $6);`
+	description, "quantityPurchased", "unitCostValue", "productId", "businessCnpj", "datePurchased", "productBatch", "providerCnpj")
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`
 
 class PurchasesController {
     async postPurchase(req, res) {
         try {
-            const values = [req.body.description, req.body.quantityPurchased, req.body.totalCostValue,
-            req.body.productId, req.body.businessCnpj, req.body.datePurchased]
+            const values = [req.body.description,
+            req.body.quantityPurchased,
+            req.body.unitCostValue,
+            req.body.productId,
+            req.body.businessCnpj,
+            req.body.datePurchased,
+            req.body.productBatch,
+            req.body.provider.providerCnpj]
             await client.query(queryPostPurchase, values)
             res.send({
                 success: true
