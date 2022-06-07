@@ -1,9 +1,9 @@
 const client = require('../database')
 
 const queryGetProducts = 'SELECT * FROM public."Product" WHERE "businessCnpj" = $1'
-const queryInsertProduct = `INSERT INTO public."Product"("productName", "minimumStock", "maximumStock", "currentStock", 
-    "measurementUnit", "businessCnpj", barcode, "productBatch", "costValue", "providerCnpj")
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`
+const queryInsertProduct = `INSERT INTO public."Product"(
+	"productName", "minimumStock", "currentStock", "measurementUnit", "businessCnpj", barcode)
+	VALUES ($1, $2, $3, $4, $5, $6);`
 const queryUpdateProductStock = `UPDATE public."Product" SET "currentStock"=$1 WHERE "productId"=$2;`
 
 class ProductController {
@@ -21,9 +21,14 @@ class ProductController {
     }
     async postProduct(req, res) {
         try {
-            const values = [req.body.productName, req.body.minimumStock,
-            req.body.maximumStock, req.body.currentStock, req.body.measurementUnit, req.body.businessCnpj, req.body.barcode,
-            req.body.productBatch, req.body.costValue, req.body.providerCnpj]
+            const values = [
+                req.body.productName,
+                req.body.minimumStock,
+                req.body.currentStock,
+                req.body.measurementUnit,
+                req.body.businessCnpj,
+                req.body.barcode,
+            ]
             await client.query(queryInsertProduct, values)
             res.send({
                 success: true

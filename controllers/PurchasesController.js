@@ -1,8 +1,9 @@
 const client = require('../database');
 
 queryPostPurchase = `INSERT INTO public."ProductPurchase"(
-	description, "quantityPurchased", "unitCostValue", "productId", "businessCnpj", "datePurchased", "productBatch", "providerCnpj")
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`
+	description, "quantityPurchased", "unitCostValue", "productId", "businessCnpj", "datePurchased", "productBatch",
+    "providerCnpj", "expirationDate")
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
 class PurchasesController {
     async postPurchase(req, res) {
@@ -14,7 +15,9 @@ class PurchasesController {
             req.body.businessCnpj,
             req.body.datePurchased,
             req.body.productBatch,
-            req.body.provider.providerCnpj]
+            req.body.provider.providerCnpj,
+            req.body.expirationDate
+            ]
             await client.query(queryPostPurchase, values)
             res.send({
                 success: true
